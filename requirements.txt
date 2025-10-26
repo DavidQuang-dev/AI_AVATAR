@@ -1,7 +1,10 @@
 livekit-agents
 livekit-plugins-openai
+livekit-plugins-google
+# livekit-plugins-silero  # Temporarily commented out due to numpy version conflicts
 livekit-plugins-noise-cancellation
 requests
+mem0ai
+duckduckgo-search
+langchain_community
 python-dotenv
-pydantic-ai-slim[openai,mcp]
-livekit-agents[tavus] ~= 1.0

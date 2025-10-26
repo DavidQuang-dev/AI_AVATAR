@@ -3,10 +3,10 @@ from dotenv import load_dotenv
 from livekit import agents
 from livekit.agents import AgentSession, Agent, RoomInputOptions
 from livekit.plugins import (
-    openai,
     noise_cancellation,
 )
-
+from livekit.plugins import google
+from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
 # Load environment variables from a .env file. By default load_dotenv()
 # will read a top-level `.env` file which this project uses.
 load_dotenv()
@@ -14,13 +14,13 @@ load_dotenv()
 
 class Assistant(Agent):
     def __init__(self) -> None:
-        super().__init__(instructions="You are a helpful voice AI assistant.")
+        super().__init__(instructions=AGENT_INSTRUCTION)
 
 
 async def entrypoint(ctx: agents.JobContext):
     session = AgentSession(
-        llm=openai.realtime.RealtimeModel(
-            voice="coral"
+        llm=google.beta.realtime.RealtimeModel(
+            voice="Charon"
         )
     )
 
@@ -32,9 +32,10 @@ async def entrypoint(ctx: agents.JobContext):
             noise_cancellation=noise_cancellation.BVC(),
         ),
     )
+    await ctx.connect()
 
     await session.generate_reply(
-        instructions="Greet the user and offer your assistance. Speek in english only."
+        instructions=SESSION_INSTRUCTION
     )
 
 
