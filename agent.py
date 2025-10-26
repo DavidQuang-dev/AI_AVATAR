@@ -7,28 +7,30 @@ from livekit.plugins import (
 )
 from livekit.plugins import google
 from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
-# Load environment variables from a .env file. By default load_dotenv()
-# will read a top-level `.env` file which this project uses.
 load_dotenv()
 
 
 class Assistant(Agent):
     def __init__(self) -> None:
-        super().__init__(instructions=AGENT_INSTRUCTION)
+        super().__init__(
+            instructions=AGENT_INSTRUCTION,
+            llm=google.beta.realtime.RealtimeModel(
+                voice="Aoede",
+                temperature=0.8,
+            )
+        )
 
 
 async def entrypoint(ctx: agents.JobContext):
     session = AgentSession(
-        llm=google.beta.realtime.RealtimeModel(
-            voice="Charon"
-        )
+
     )
 
     await session.start(
         room=ctx.room,
         agent=Assistant(),
         room_input_options=RoomInputOptions(
-            # For telephony applications, use `BVCTelephony` instead for best results
+            video_enabled=True,
             noise_cancellation=noise_cancellation.BVC(),
         ),
     )
